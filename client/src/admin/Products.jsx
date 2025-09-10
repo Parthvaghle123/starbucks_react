@@ -339,7 +339,6 @@ const Products = () => {
                 <th style={{ width: '25%' }}>Product</th>
                 <th style={{ width: '12%' }}>Category</th>
                 <th style={{ width: '10%' }}>Price</th>
-                <th style={{ width: '10%' }}>Stock</th>
                 <th style={{ width: '12%' }}>Status</th>
                 <th style={{ width: '18%' }}>Display Options</th>
                 <th style={{ width: '13%' }}>Actions</th>
@@ -378,11 +377,6 @@ const Products = () => {
                 </td>
                 <td>
                   <span className="price-amount">₹{product.price}</span>
-                </td>
-                <td>
-                  <span className={`stock-badge ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
-                    {product.stock > 0 ? `${product.stock} units` : 'Out of Stock'}
-                  </span>
                 </td>
                 <td>
                   <button
@@ -453,7 +447,7 @@ const Products = () => {
             <p className="mb-0">
               {searchTerm || categoryFilter !== "All Categories"
                 ? "Try adjusting your search or filter criteria"
-                : "Get started by adding yorst product"}
+                : "Get started by adding yogit rst product"}
             </p>
           </div>
         )}
@@ -530,19 +524,6 @@ const Products = () => {
                       />
                     </div>
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Stock *</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        name="stock"
-                        value={formData.stock}
-                        onChange={handleInputChange}
-                        min="0"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="mb-3">
                     <label className="form-label">Image URL *</label>
                     <input
                       type="url"
@@ -557,6 +538,8 @@ const Products = () => {
                       spellCheck={false}
                       required
                     />
+                    </div>
+                  </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
                       {imagePreview && (
                         <div style={{ border: '2px solid #00704A', borderRadius: '12px', padding: '8px', background: '#fafafa', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
@@ -567,9 +550,7 @@ const Products = () => {
                         <div style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>{imageError}</div>
                       )}
                     </div>
-                  </div>
                   <div className="row">
-              
                     <div className="col-md-12 mb-3">
                       <div className="form-check">
                         <input
@@ -671,6 +652,7 @@ const Products = () => {
                       required
                     ></textarea>
                   </div>
+               
                   <div className="row">
                     <div className="col-md-6 mb-3">
                       <label className="form-label">Price (₹) *</label>
@@ -686,19 +668,6 @@ const Products = () => {
                       />
                     </div>
                     <div className="col-md-6 mb-3">
-                      <label className="form-label">Stock *</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        name="stock"
-                        value={formData.stock}
-                        onChange={handleInputChange}
-                        min="0"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="mb-3">
                     <label className="form-label">Image URL *</label>
                     <input
                       type="url"
@@ -707,8 +676,14 @@ const Products = () => {
                       value={formData.image}
                       onChange={handleInputChange}
                       placeholder="https://example.com/image.jpg"
+                      autoComplete="off"
+                      autoCapitalize="words"
+                      autoCorrect="off"
+                      spellCheck={false}
                       required
                     />
+                    </div>
+                  </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
                       {imagePreview && (
                         <div style={{ border: '2px solid #00704A', borderRadius: '12px', padding: '8px', background: '#fafafa', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
@@ -718,9 +693,7 @@ const Products = () => {
                       {imageError && (
                         <div style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>{imageError}</div>
                       )}
-                    </div>
-                  </div>
-                  <div className="row">           
+                    </div>   <div className="row">           
                     <div className="col-md-12 mb-3">
                       <div className="form-check">
                         <input
