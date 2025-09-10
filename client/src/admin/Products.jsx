@@ -14,7 +14,7 @@ import {
   Menu,
   CheckCircle,
   XCircle,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Products.css";
@@ -29,7 +29,7 @@ const Products = () => {
     stock: "",
     featured: false,
     displayOnGift: false,
-    displayOnMenu: false
+    displayOnMenu: false,
   });
   // Image preview and error state for Add/Edit modals
   const [imagePreview, setImagePreview] = useState("");
@@ -81,7 +81,9 @@ const Products = () => {
     }
 
     if (categoryFilter !== "All Categories") {
-      filtered = filtered.filter((product) => product.category === categoryFilter);
+      filtered = filtered.filter(
+        (product) => product.category === categoryFilter
+      );
     }
 
     setFilteredProducts(filtered);
@@ -103,9 +105,9 @@ const Products = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -119,7 +121,7 @@ const Products = () => {
       stock: "",
       featured: false,
       displayOnGift: false,
-      displayOnMenu: false
+      displayOnMenu: false,
     });
   };
 
@@ -135,7 +137,7 @@ const Products = () => {
 
       if (response.data.success) {
         // Add new product to the beginning of the list
-        setProducts(prev => [response.data.product, ...prev]);
+        setProducts((prev) => [response.data.product, ...prev]);
         setShowAddModal(false);
         resetForm();
         alert("Product added successfully!");
@@ -157,9 +159,11 @@ const Products = () => {
 
       if (response.data.success) {
         // Update product in the list
-        setProducts(prev =>
-          prev.map(product =>
-            product._id === selectedProduct._id ? response.data.product : product
+        setProducts((prev) =>
+          prev.map((product) =>
+            product._id === selectedProduct._id
+              ? response.data.product
+              : product
           )
         );
         setShowEditModal(false);
@@ -187,7 +191,9 @@ const Products = () => {
 
       if (response.data.success) {
         // Remove product from the list
-        setProducts(prev => prev.filter(product => product._id !== productId));
+        setProducts((prev) =>
+          prev.filter((product) => product._id !== productId)
+        );
         alert("Product deleted successfully!");
       }
     } catch (err) {
@@ -206,8 +212,8 @@ const Products = () => {
 
       if (response.data.success) {
         // Update product in the list
-        setProducts(prev =>
-          prev.map(product =>
+        setProducts((prev) =>
+          prev.map((product) =>
             product._id === productId ? response.data.product : product
           )
         );
@@ -228,8 +234,8 @@ const Products = () => {
 
       if (response.data.success) {
         // Update product in the list
-        setProducts(prev =>
-          prev.map(product =>
+        setProducts((prev) =>
+          prev.map((product) =>
             product._id === productId ? response.data.product : product
           )
         );
@@ -250,7 +256,7 @@ const Products = () => {
       stock: product.stock.toString(),
       featured: product.featured,
       displayOnGift: product.displayOnGift,
-      displayOnMenu: product.displayOnMenu
+      displayOnMenu: product.displayOnMenu,
     });
     setShowEditModal(true);
   };
@@ -279,466 +285,592 @@ const Products = () => {
   return (
     <div className="container">
       <div className="products-container">
-       <div className="page-header">
+        <div className="page-header">
           <h1>Product Management</h1>
-          <p>Manage all products, add new ones, and control their display on gift and menu pages</p>
+          <p>
+            Manage all products, add new ones, and control their display on gift
+            and menu pages
+          </p>
         </div>
         <hr />
 
-      {/* Search & Filter & Add Button */}
-      <div className="search-filter-container d-flex flex-wrap gap-3 mb-4 align-items-center">
-        <div className="search-input position-relative flex-grow-1">
-          <Search
-            size={18}
-            className="search-icon position-absolute"
-            style={{ top: "50%", left: "15px", transform: "translateY(-50%)" }}
-          />
-          <input
-            type="text"
-            className="form-control ps-5"
-            placeholder="Search products by name or description"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        {/* Search & Filter & Add Button */}
+        <div className="search-filter-container d-flex flex-wrap gap-3 mb-4 align-items-center">
+          <div className="search-input position-relative flex-grow-1">
+            <Search
+              size={18}
+              className="search-icon position-absolute"
+              style={{
+                top: "50%",
+                left: "15px",
+                transform: "translateY(-50%)",
+              }}
+            />
+            <input
+              type="text"
+              className="form-control ps-5"
+              placeholder="Search products by name or description"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
 
-        <div className="filter-dropdown d-flex align-items-center gap-2">
-          <Filter size={18} className="text-muted" />
-          <select
-            className="form-select"
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+          <div className="filter-dropdown d-flex align-items-center gap-2">
+            <Filter size={18} className="text-muted" />
+            <select
+              className="form-select"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+            >
+              <option value="All Categories">All Categories</option>
+              <option value="Drinks">Drinks</option>
+              <option value="Food">Food</option>
+              <option value="Gifts">Gifts</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <button
+            className="btn btn-success add-product-btn fw-bold"
+            style={{ width: "25%" }}
+            onClick={() => {
+              resetForm();
+              setShowAddModal(true);
+            }}
           >
-            <option value="All Categories">All Categories</option>
-            <option value="Drinks">Drinks</option>
-            <option value="Food">Food</option>
-            <option value="Gifts">Gifts</option>
-            <option value="Other">Other</option>
-          </select>
+            <Plus size={18} className="me-2" />
+            Add Product
+          </button>
         </div>
 
-        <button
-          className="btn btn-success add-product-btn fw-bold"
-          style={{ width: '25%' }}
-          onClick={() => {
-            resetForm();
-            setShowAddModal(true);
-          }}
-        >
-          <Plus size={18} className="me-2" />
-          Add Product
-        </button>
-      </div>
-
-      {/* Products Table */}
-      <div className="products-table-card">
-        <div className="table-responsive">
-          <table className="table align-middle mb-0 modern-table">
-            <thead>
-              <tr>
-                <th style={{ width: '25%' }}>Product</th>
-                <th style={{ width: '12%' }}>Category</th>
-                <th style={{ width: '10%' }}>Price</th>
-                <th style={{ width: '12%' }}>Status</th>
-                <th style={{ width: '18%' }}>Display Options</th>
-                <th style={{ width: '13%' }}>Actions</th>
-              </tr>
-            </thead>
-          <tbody>
-            {filteredProducts.map((product) => (
-              <tr key={product._id}>
-                <td>
-                  <div className="product-info">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="product-image"
-                      onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/50x50?text=No+Image";
-                      }}
-                    />
-                    <div className="product-details">
-                      <div className="product-name ">
-                        {product.name}
-                        {product.featured && (
-                          <Star size={14} className="ms-2 text-warning" fill="currentColor" />
-                        )}
+        {/* Products Table */}
+        <div className="products-table-card">
+          <div className="table-responsive">
+            <table className="table align-middle mb-0 modern-table">
+              <thead>
+                <tr>
+                  <th style={{ width: "25%" }}>Product</th>
+                  <th style={{ width: "12%" }}>Category</th>
+                  <th style={{ width: "10%" }}>Price</th>
+                  <th style={{ width: "12%" }}>Status</th>
+                  <th style={{ width: "18%" }}>Display Options</th>
+                  <th style={{ width: "13%" }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredProducts.map((product) => (
+                  <tr key={product._id}>
+                    <td>
+                      <div className="product-info">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="product-image"
+                          onError={(e) => {
+                            e.target.src =
+                              "https://via.placeholder.com/50x50?text=No+Image";
+                          }}
+                        />
+                        <div className="product-details">
+                          <div className="product-name ">
+                            {product.name}
+                            {product.featured && (
+                              <Star
+                                size={14}
+                                className="ms-2 text-warning"
+                                fill="currentColor"
+                              />
+                            )}
+                          </div>
+                          <div className="product-description">
+                            {product.description.length > 50
+                              ? `${product.description.substring(0, 50)}...`
+                              : product.description}
+                          </div>
+                        </div>
                       </div>
-                      <div className="product-description">
-                        {product.description.length > 50
-                          ? `${product.description.substring(0, 50)}...`
-                          : product.description}
+                    </td>
+                    <td>
+                      <span className="category-badge">{product.category}</span>
+                    </td>
+                    <td>
+                      <span className="price-amount">₹{product.price}</span>
+                    </td>
+                    <td>
+                      <button
+                        className={`btn btn-sm fw-bold ${
+                          product.isAvailable ? "btn-success" : "btn-secondary"
+                        }`}
+                        onClick={() => handleToggleAvailability(product._id)}
+                        title={
+                          product.isAvailable
+                            ? "Click to deactivate"
+                            : "Click to activate"
+                        }
+                      >
+                        {product.isAvailable ? (
+                          <>
+                            <CheckCircle size={14} />
+                            Active
+                          </>
+                        ) : (
+                          <>
+                            <XCircle size={14} />
+                            Inactive
+                          </>
+                        )}
+                      </button>
+                    </td>
+                    <td>
+                      <div className="display-options">
+                        <button
+                          className={`btn btn-sm ${
+                            product.displayOnGift
+                              ? "btn-info"
+                              : "btn-outline-info"
+                          }`}
+                          onClick={() =>
+                            handleToggleDisplay(product._id, "gift")
+                          }
+                          title={
+                            product.displayOnGift
+                              ? "Remove from Gift page"
+                              : "Add to Gift page"
+                          }
+                        >
+                          <Gift size={14} />
+                        </button>
+                        <button
+                          className={`btn btn-sm ${
+                            product.displayOnMenu
+                              ? "btn-warning"
+                              : "btn-outline-warning"
+                          }`}
+                          onClick={() =>
+                            handleToggleDisplay(product._id, "menu")
+                          }
+                          title={
+                            product.displayOnMenu
+                              ? "Remove from Menu page"
+                              : "Add to Menu page"
+                          }
+                        >
+                          <Menu size={14} />
+                        </button>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="action-buttons">
+                        <button
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() => openEditModal(product)}
+                          title="Edit product"
+                        >
+                          <Edit size={14} />
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleDeleteProduct(product._id)}
+                          title="Delete product"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Empty State */}
+          {filteredProducts.length === 0 && (
+            <div className="empty-state">
+              <Package size={48} className="text-muted mb-3" />
+              <h5>No products found</h5>
+              <p className="mb-0">
+                {searchTerm || categoryFilter !== "All Categories"
+                  ? "Try adjusting your search or filter criteria"
+                  : "Get started by adding yogit rst product"}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Add Product Modal */}
+        {showAddModal && (
+          <div
+            className="modal show d-block"
+            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          >
+            <div className="modal-dialog modal-lg">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">
+                    <Plus size={24} className="me-2" />
+                    Add New Product
+                  </h5>
+                </div>
+                <form onSubmit={handleAddProduct}>
+                  <div className="modal-body">
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Product Name *</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          autoComplete="off"
+                          autoCapitalize="words"
+                          autoCorrect="off"
+                          spellCheck={false}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Category *</label>
+                        <select
+                          className="form-select"
+                          name="category"
+                          value={formData.category}
+                          onChange={handleInputChange}
+                          required
+                        >
+                          <option value="Drinks">Drinks</option>
+                          <option value="Food">Food</option>
+                          <option value="Gifts">Gifts</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Description *</label>
+                      <textarea
+                        className="form-control"
+                        name="description"
+                        rows="3"
+                        style={{ resize: "none", height: "80px" }}
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        required
+                      ></textarea>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Price (₹) *</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="price"
+                          value={formData.price}
+                          onChange={handleInputChange}
+                          min="0"
+                          step="0.01"
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Image URL *</label>
+                        <input
+                          type="url"
+                          className="form-control"
+                          name="image"
+                          value={formData.image}
+                          onChange={handleInputChange}
+                          placeholder="https://example.com/image.jpg"
+                          autoComplete="off"
+                          autoCapitalize="words"
+                          autoCorrect="off"
+                          spellCheck={false}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <label className="form-label">Image Preview</label>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        marginTop: "10px",
+                      }}
+                    >
+                      {imagePreview && (
+                        <div
+                          style={{
+                            border: "2px solid #00704A",
+                            borderRadius: "12px",
+                            padding: "8px",
+                            background: "#fafafa",
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
+                          }}
+                        >
+                          <img
+                            src={imagePreview}
+                            alt="Preview"
+                            style={{
+                              maxWidth: "220px",
+                              maxHeight: "220px",
+                              borderRadius: "8px",
+                              display: "block",
+                            }}
+                          />
+                        </div>
+                      )}
+                      {imageError && (
+                        <div
+                          style={{
+                            color: "red",
+                            marginTop: "5px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {imageError}
+                        </div>
+                      )}
+                    </div>
+                    <div className="row">
+                      <div className="col-md-12 mb-3">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            name="displayOnGift"
+                            checked={formData.displayOnGift}
+                            onChange={handleInputChange}
+                          />
+                          <label className="form-check-label">
+                            Show on Gift Page
+                          </label>
+                        </div>
+                      </div>
+                      <div className="col-md-12 mb-3">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            name="displayOnMenu"
+                            checked={formData.displayOnMenu}
+                            onChange={handleInputChange}
+                          />
+                          <label className="form-check-label">
+                            Show on Menu Page
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </td>
-                <td>
-                  <span className="category-badge">{product.category}</span>
-                </td>
-                <td>
-                  <span className="price-amount">₹{product.price}</span>
-                </td>
-                <td>
-                  <button
-                    className={`btn btn-sm fw-bold ${product.isAvailable ? 'btn-success' : 'btn-secondary'}`}
-                    onClick={() => handleToggleAvailability(product._id)}
-                    title={product.isAvailable ? 'Click to deactivate' : 'Click to activate'}
-                  >
-                    {product.isAvailable ? (
-                      <>
-                        <CheckCircle size={14} />
-                        Active
-                      </>
-                    ) : (
-                      <>
-                        <XCircle size={14} />
-                        Inactive
-                      </>
-                    )}
-                  </button>
-                </td>
-                <td>
-                  <div className="display-options">
+                  <div className="modal-footer">
                     <button
-                      className={`btn btn-sm ${product.displayOnGift ? 'btn-info' : 'btn-outline-info'}`}
-                      onClick={() => handleToggleDisplay(product._id, 'gift')}
-                      title={product.displayOnGift ? 'Remove from Gift page' : 'Add to Gift page'}
+                      type="button"
+                      className="btn btn-secondary fw-bold w-25"
+                      onClick={() => setShowAddModal(false)}
                     >
-                      <Gift size={14} />
+                      Cancel
                     </button>
                     <button
-                      className={`btn btn-sm ${product.displayOnMenu ? 'btn-warning' : 'btn-outline-warning'}`}
-                      onClick={() => handleToggleDisplay(product._id, 'menu')}
-                      title={product.displayOnMenu ? 'Remove from Menu page' : 'Add to Menu page'}
+                      type="submit"
+                      className="btn btn-success fw-bold w-25"
                     >
-                      <Menu size={14} />
+                      Add Product
                     </button>
                   </div>
-                </td>
-                <td>
-                  <div className="action-buttons">
-                    <button
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() => openEditModal(product)}
-                      title="Edit product"
-                    >
-                      <Edit size={14} />
-                    </button>
-                    <button
-                      className="btn btn-sm btn-outline-danger"
-                      onClick={() => handleDeleteProduct(product._id)}
-                      title="Delete product"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
 
-        {/* Empty State */}
-        {filteredProducts.length === 0 && (
-          <div className="empty-state">
-            <Package size={48} className="text-muted mb-3" />
-            <h5>No products found</h5>
-            <p className="mb-0">
-              {searchTerm || categoryFilter !== "All Categories"
-                ? "Try adjusting your search or filter criteria"
-                : "Get started by adding yogit rst product"}
-            </p>
+        {/* Edit Product Modal */}
+        {showEditModal && (
+          <div
+            className="modal show d-block"
+            style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          >
+            <div className="modal-dialog modal-lg">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">
+                    <Edit size={24} className="me-2" />
+                    Edit Product: {selectedProduct?.name}
+                  </h5>
+                  <button
+                    type="button"
+                    className="btn-close btn-modal-close"
+                    onClick={() => setShowEditModal(false)}
+                  ></button>
+                </div>
+                <form onSubmit={handleEditProduct}>
+                  <div className="modal-body">
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Product Name *</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Category *</label>
+                        <select
+                          className="form-select"
+                          name="category"
+                          value={formData.category}
+                          onChange={handleInputChange}
+                          required
+                        >
+                          <option value="Drinks">Drinks</option>
+                          <option value="Food">Food</option>
+                          <option value="Gifts">Gifts</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Description *</label>
+                      <textarea
+                        className="form-control"
+                        name="description"
+                        style={{ resize: "none", height: "80px" }}
+                        rows="3"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        required
+                      ></textarea>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Price (₹) *</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="price"
+                          value={formData.price}
+                          onChange={handleInputChange}
+                          min="0"
+                          step="0.01"
+                          required
+                        />
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <label className="form-label">Image URL *</label>
+                        <input
+                          type="url"
+                          className="form-control"
+                          name="image"
+                          value={formData.image}
+                          onChange={handleInputChange}
+                          placeholder="https://example.com/image.jpg"
+                          autoComplete="off"
+                          autoCapitalize="words"
+                          autoCorrect="off"
+                          spellCheck={false}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <label className="form-label">Image Preview</label>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        marginTop: "10px",
+                      }}
+                    >
+                      {imagePreview && (
+                        <div
+                          style={{
+                            border: "2px solid #00704A",
+                            borderRadius: "12px",
+                            padding: "8px",
+                            background: "#fafafa",
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
+                          }}
+                        >
+                          <img
+                            src={imagePreview}
+                            alt="Preview"
+                            style={{
+                              maxWidth: "220px",
+                              maxHeight: "220px",
+                              borderRadius: "8px",
+                              display: "block",
+                            }}
+                          />
+                        </div>
+                      )}
+                      {imageError && (
+                        <div
+                          style={{
+                            color: "red",
+                            marginTop: "5px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {imageError}
+                        </div>
+                      )}
+                    </div>{" "}
+                    <div className="row">
+                      <div className="col-md-12 mb-3">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            name="displayOnGift"
+                            checked={formData.displayOnGift}
+                            onChange={handleInputChange}
+                          />
+                          <label className="form-check-label">
+                            Show on Gift Page
+                          </label>
+                        </div>
+                      </div>
+                      <div className="col-md-12 mb-3">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            name="displayOnMenu"
+                            checked={formData.displayOnMenu}
+                            onChange={handleInputChange}
+                          />
+                          <label className="form-check-label">
+                            Show on Menu Page
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-secondary fw-bold  w-25"
+                      onClick={() => setShowEditModal(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-success fw-bold w-25"
+                    >
+                      Update Product
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         )}
       </div>
-
-      {/* Add Product Modal */}
-      {showAddModal && (
-        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">
-                  <Plus size={24} className="me-2" />
-                  Add New Product
-                </h5>
-              </div>
-              <form onSubmit={handleAddProduct}>
-                <div className="modal-body">
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Product Name *</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        autoComplete="off"
-                        autoCapitalize="words"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Category *</label>
-                      <select
-                        className="form-select"
-                        name="category"
-                        value={formData.category}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="Drinks">Drinks</option>
-                        <option value="Food">Food</option>
-                        <option value="Gifts">Gifts</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Description *</label>
-                    <textarea
-                      className="form-control"
-                      name="description"
-                      rows="3"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      required
-                    ></textarea>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Price (₹) *</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleInputChange}
-                        min="0"
-                        step="0.01"
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                    <label className="form-label">Image URL *</label>
-                    <input
-                      type="url"
-                      className="form-control"
-                      name="image"
-                      value={formData.image}
-                      onChange={handleInputChange}
-                      placeholder="https://example.com/image.jpg"
-                      autoComplete="off"
-                      autoCapitalize="words"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      required
-                    />
-                    </div>
-                  </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
-                      {imagePreview && (
-                        <div style={{ border: '2px solid #00704A', borderRadius: '12px', padding: '8px', background: '#fafafa', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
-                          <img src={imagePreview} alt="Preview" style={{ maxWidth: '220px', maxHeight: '220px', borderRadius: '8px', display: 'block' }} />
-                        </div>
-                      )}
-                      {imageError && (
-                        <div style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>{imageError}</div>
-                      )}
-                    </div>
-                  <div className="row">
-                    <div className="col-md-12 mb-3">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name="displayOnGift"
-                          checked={formData.displayOnGift}
-                          onChange={handleInputChange}
-                        />
-                        <label className="form-check-label">Show on Gift Page</label>
-                      </div>
-                    </div>
-                    <div className="col-md-12 mb-3">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name="displayOnMenu"
-                          checked={formData.displayOnMenu}
-                          onChange={handleInputChange}
-                        />
-                        <label className="form-check-label">Show on Menu Page</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary fw-bold w-25"
-                    onClick={() => setShowAddModal(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button type="submit" className="btn btn-success fw-bold w-25">
-                    Add Product
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Product Modal */}
-      {showEditModal && (
-        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">
-                  <Edit size={24} className="me-2" />
-                  Edit Product: {selectedProduct?.name}
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close btn-modal-close"
-                  onClick={() => setShowEditModal(false)}
-                ></button>
-              </div>
-              <form onSubmit={handleEditProduct}>
-                <div className="modal-body">
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Product Name *</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Category *</label>
-                      <select
-                        className="form-select"
-                        name="category"
-                        value={formData.category}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="Drinks">Drinks</option>
-                        <option value="Food">Food</option>
-                        <option value="Gifts">Gifts</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Description *</label>
-                    <textarea
-                      className="form-control"
-                      name="description"
-                      rows="3"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      required
-                    ></textarea>
-                  </div>
-               
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Price (₹) *</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleInputChange}
-                        min="0"
-                        step="0.01"
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                    <label className="form-label">Image URL *</label>
-                    <input
-                      type="url"
-                      className="form-control"
-                      name="image"
-                      value={formData.image}
-                      onChange={handleInputChange}
-                      placeholder="https://example.com/image.jpg"
-                      autoComplete="off"
-                      autoCapitalize="words"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      required
-                    />
-                    </div>
-                  </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
-                      {imagePreview && (
-                        <div style={{ border: '2px solid #00704A', borderRadius: '12px', padding: '8px', background: '#fafafa', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
-                          <img src={imagePreview} alt="Preview" style={{ maxWidth: '220px', maxHeight: '220px', borderRadius: '8px', display: 'block' }} />
-                        </div>
-                      )}
-                      {imageError && (
-                        <div style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>{imageError}</div>
-                      )}
-                    </div>   <div className="row">           
-                    <div className="col-md-12 mb-3">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name="displayOnGift"
-                          checked={formData.displayOnGift}
-                          onChange={handleInputChange}
-                        />
-                        <label className="form-check-label">Show on Gift Page</label>
-                      </div>
-                    </div>
-                    <div className="col-md-12 mb-3">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          name="displayOnMenu"
-                          checked={formData.displayOnMenu}
-                          onChange={handleInputChange}
-                        />
-                        <label className="form-check-label">Show on Menu Page</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button
-                    type="button"
-                    className="btn btn-secondary fw-bold  w-25"
-                    onClick={() => setShowEditModal(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button type="submit" className="btn btn-success fw-bold w-25">
-                    Update Product
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
-  </div>
   );
 };
 
