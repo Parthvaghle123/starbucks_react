@@ -23,10 +23,27 @@ const Register = () => {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
+
   // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // ✅ Phone only digits max 10
+    if (name === "phone") {
+      if (/^\d{0,10}$/.test(value)) {
+        setForm((prev) => ({ ...prev, [name]: value }));
+      }
+    }
+    // ✅ Username only alphabets and space
+    else if (name === "username") {
+      if (/^[A-Za-z\s]*$/.test(value)) {
+        setForm((prev) => ({ ...prev, [name]: value }));
+      }
+    }
+    // ✅ Other inputs normal
+    else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   // Password Strength
@@ -47,42 +64,40 @@ const Register = () => {
   const validateForm = () => {
     let newErrors = {};
 
+       // Username
     if (!form.username || form.username.length < 3) {
       newErrors.username = "Username must be at least 3 characters.";
+    } else if (!/^[A-Za-z\s]+$/.test(form.username)) {
+      newErrors.username = "Username must contain only letters.";
     }
-
+    // Email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
       newErrors.email = "Enter a valid email address.";
     }
 
+    // Phone ✅ only 10 digits required
     const phoneRegex = /^[0-9]{10}$/;
     if (!phoneRegex.test(form.phone)) {
-      newErrors.phone = "Phone must be 10 digits.";
+      newErrors.phone = "Phone must be exactly 10 digits.";
     }
 
+    // Gender
     if (!form.gender) {
       newErrors.gender = "Please select gender.";
     }
 
+    // DOB (Required only, no age check)
     if (!form.dob) {
       newErrors.dob = "Date of birth is required.";
-    } else {
-      const today = new Date();
-      const birthDate = new Date(form.dob);
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-
-      if (age < 18) {
-        newErrors.dob = "You must be at least 18 years old.";
-      }
     }
 
+    // Address
     if (!form.address || form.address.length < 5) {
       newErrors.address = "Address must be at least 5 characters.";
     }
 
+    // Password
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
     if (!passwordRegex.test(password)) {
       newErrors.password =
@@ -280,18 +295,23 @@ const Register = () => {
                 />
                 <small className="text-muted">{strengthMessage}</small>
                 {errors.password && (
-                  <small className="text-danger d-block">{errors.password}</small>
+                  <small className="text-danger d-block">
+                    {errors.password}
+                  </small>
                 )}
               </div>
 
-            <button type="submit" className="btn7 fw-bold w-100 rounded">
+              <button type="submit" className="btn7 fw-bold w-100 rounded">
                 Register
               </button>
             </form>
 
             <p className="text-center mt-3">
               Already registered?{" "}
-              <a href="/login" className="text-decoration-none fw-bold text-success">
+              <a
+                href="/login"
+                className="text-decoration-none fw-bold text-success"
+              >
                 Login here
               </a>
             </p>

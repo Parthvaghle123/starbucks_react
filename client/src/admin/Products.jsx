@@ -20,15 +20,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./Products.css";
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("All Categories");
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -40,6 +31,37 @@ const Products = () => {
     displayOnGift: false,
     displayOnMenu: false
   });
+  // Image preview and error state for Add/Edit modals
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageError, setImageError] = useState("");
+
+  // Validate and preview image URL in real-time
+  useEffect(() => {
+    if (!formData.image) {
+      setImagePreview("");
+      setImageError("");
+      return;
+    }
+    const img = new window.Image();
+    img.onload = () => {
+      setImagePreview(formData.image);
+      setImageError("");
+    };
+    img.onerror = () => {
+      setImagePreview("");
+      setImageError("Invalid image URL or image could not be loaded.");
+    };
+    img.src = formData.image;
+  }, [formData.image]);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All Categories");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   // Fetch products on component mount
   useEffect(() => {
@@ -48,25 +70,22 @@ const Products = () => {
 
   // Filter products based on search and category
   useEffect(() => {
-  let filtered = [...products];
+    let filtered = [...products];
 
-  // ✅ Only search by name
-  if (searchTerm) {
-    filtered = filtered.filter(
-      (product) =>
-        product.name?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (product) =>
+          product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
 
-  // 📂 Category filter
-  if (categoryFilter !== "All Categories") {
-    filtered = filtered.filter(
-      (product) => product.category === categoryFilter
-    );
-  }
+    if (categoryFilter !== "All Categories") {
+      filtered = filtered.filter((product) => product.category === categoryFilter);
+    }
 
-  setFilteredProducts(filtered);
-}, [searchTerm, categoryFilter, products]);
+    setFilteredProducts(filtered);
+  }, [searchTerm, categoryFilter, products]);
 
   const fetchProducts = async () => {
     try {
@@ -434,7 +453,7 @@ const Products = () => {
             <p className="mb-0">
               {searchTerm || categoryFilter !== "All Categories"
                 ? "Try adjusting your search or filter criteria"
-                : "Get started by adding your first product"}
+                : "Get started by adding yorst product"}
             </p>
           </div>
         )}
@@ -538,9 +557,20 @@ const Products = () => {
                       spellCheck={false}
                       required
                     />
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
+                      {imagePreview && (
+                        <div style={{ border: '2px solid #00704A', borderRadius: '12px', padding: '8px', background: '#fafafa', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
+                          <img src={imagePreview} alt="Preview" style={{ maxWidth: '220px', maxHeight: '220px', borderRadius: '8px', display: 'block' }} />
+                        </div>
+                      )}
+                      {imageError && (
+                        <div style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>{imageError}</div>
+                      )}
+                    </div>
                   </div>
                   <div className="row">
-                    <div className="mb-3">
+              
+                    <div className="col-md-12 mb-3">
                       <div className="form-check">
                         <input
                           className="form-check-input"
@@ -552,7 +582,7 @@ const Products = () => {
                         <label className="form-check-label">Show on Gift Page</label>
                       </div>
                     </div>
-                    <div className="mb-3">
+                    <div className="col-md-12 mb-3">
                       <div className="form-check">
                         <input
                           className="form-check-input"
@@ -574,7 +604,7 @@ const Products = () => {
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-primary w-25">
+                  <button type="submit" className="btn btn-success fw-bold w-25">
                     Add Product
                   </button>
                 </div>
@@ -679,9 +709,19 @@ const Products = () => {
                       placeholder="https://example.com/image.jpg"
                       required
                     />
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
+                      {imagePreview && (
+                        <div style={{ border: '2px solid #00704A', borderRadius: '12px', padding: '8px', background: '#fafafa', boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
+                          <img src={imagePreview} alt="Preview" style={{ maxWidth: '220px', maxHeight: '220px', borderRadius: '8px', display: 'block' }} />
+                        </div>
+                      )}
+                      {imageError && (
+                        <div style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>{imageError}</div>
+                      )}
+                    </div>
                   </div>
-                  <div className="row">
-                    <div className="mb-3">
+                  <div className="row">           
+                    <div className="col-md-12 mb-3">
                       <div className="form-check">
                         <input
                           className="form-check-input"
@@ -693,7 +733,7 @@ const Products = () => {
                         <label className="form-check-label">Show on Gift Page</label>
                       </div>
                     </div>
-                    <div className="mb-3">
+                    <div className="col-md-12 mb-3">
                       <div className="form-check">
                         <input
                           className="form-check-input"
@@ -715,7 +755,7 @@ const Products = () => {
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-primary w-25">
+                  <button type="submit" className="btn btn-success fw-bold w-25">
                     Update Product
                   </button>
                 </div>

@@ -97,7 +97,7 @@ const Check = () => {
       <div className="row justify-content-center">
         <div className="col-lg-5 col-md-8">
           <div className="card shadow-lg border-0 p-4 rounded-4">
-              <h1 className="fs-3 text-success text-center fw-bold checkout-title">StarPay</h1>
+              <h1 className="fs-3 text-success text-center fw-bold checkout-title">Payment</h1>
               <p className="text-success fw-bold text-center checkout-subtitle">Brew & Pay • Easy Checkout</p>
             <hr />
             {errorMsg && (

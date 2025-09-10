@@ -98,25 +98,6 @@ const Users = () => {
     setFilteredUsers(filtered);
   }, [users, searchTerm, statusFilter]);
 
-  const handleDeleteUser = async (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        const token = localStorage.getItem("adminToken");
-        if (!token) {
-          alert("Admin token missing. Please login.");
-          return;
-        }
-        await axios.delete(`http://localhost:3001/api/admin/users/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUsers(users.filter((u) => u._id !== userId));
-        setTotalUsers((prev) => prev - 1);
-      } catch (err) {
-        alert("Failed to delete user.");
-        console.error(err);
-      }
-    }
-  };
 
   const formatDate = (dateStr) =>
     dateStr ? new Date(dateStr).toLocaleDateString() : "N/A";
@@ -131,14 +112,7 @@ const Users = () => {
     return age;
   };
 
-  const getStatusBadge = (status) => {
-    const badge = {
-      active: "status-badge status-active",
-      inactive: "status-badge status-inactive",
-      pending: "status-badge status-pending",
-    };
-    return badge[status] || "status-badge";
-  };
+ 
 
   const getGenderBadge = (gender) => {
     const genderClasses = {
@@ -253,7 +227,7 @@ const Users = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
+{/* 
           <div className="filter-dropdown d-flex align-items-center gap-2">
             <Filter size={18} className="text-muted" />
             <select
@@ -265,7 +239,7 @@ const Users = () => {
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
-          </div>
+          </div> */}
         </div>
 
         {/* Table */}
@@ -317,19 +291,19 @@ const Users = () => {
                         </div>
                       </td>
                       <td>{formatDate(user.createdAt)}</td>
-                      <td>
+                   {/* <td>
                         <span className={getStatusBadge(user.status)}>
                           {user.status || "active"}
                         </span>
-                      </td>
-                      <td>
+                      </td> */}
+                      {/* <td>
                         <button
                           className="btn btn-danger btn-sm"
                           onClick={() => handleDeleteUser(user._id)}
                         >
                           <Trash2 size={14} />
                         </button>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>

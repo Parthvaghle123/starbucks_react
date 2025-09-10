@@ -324,7 +324,7 @@ const ADMIN_PASS = 'admin123';
 app.post('/admin/login', (req, res) => {
   const { username, password } = req.body;
   if (username === ADMIN_USER && password === ADMIN_PASS) {
-    const token = jwt.sign({ admin: true, username }, SECRET_KEY, { expiresIn: '7d' });
+    const token = jwt.sign({ admin: true, username }, SECRET_KEY, { expiresIn: '1d' });
     return res.json({ success: true, token });
   }
   res.json({ success: false, message: 'Invalid admin credentials' });
@@ -382,7 +382,34 @@ app.get('/api/admin/stats', authenticateAdmin, async (req, res) => {
   }
 });
 
-~
+// Admin: Update order status
+app.put('/admin/orders/:orderId/status', authenticateAdmin, async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+    
+    // Validate status
+    const validStatuses = ['Pending', 'Approved', 'Cancelled'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Invalid status provided' });
+    }
+    
+    const order = await Order.findByIdAndUpdate(
+      orderId, 
+      { status, updatedAt: new Date() }, 
+      { new: true }
+    );
+    
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    
+    res.json({ success: true, message: `Order status updated to ${status}`, order });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to update order status', error: err.message });
+  }
+});
+
 // Admin: Delete user by ID
 app.delete('/api/admin/users/:id', authenticateAdmin, async (req, res) => {
   try {
