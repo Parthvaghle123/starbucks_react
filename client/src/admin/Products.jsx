@@ -500,7 +500,7 @@ const Products = () => {
         {/* Add Product Modal */}
         {showAddModal && (
           <div
-            className="modal show d-block"
+            className="modal show d-block "
             style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
           >
             <div className="modal-dialog modal-lg">
