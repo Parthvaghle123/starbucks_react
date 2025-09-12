@@ -23,7 +23,6 @@ const Register = () => {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-
   // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +63,7 @@ const Register = () => {
   const validateForm = () => {
     let newErrors = {};
 
-       // Username
+    // Username
     if (!form.username || form.username.length < 3) {
       newErrors.username = "Username must be at least 3 characters.";
     } else if (!/^[A-Za-z\s]+$/.test(form.username)) {
@@ -87,11 +86,24 @@ const Register = () => {
       newErrors.gender = "Please select gender.";
     }
 
-    // DOB (Required only, no age check)
-    if (!form.dob) {
-      newErrors.dob = "Date of birth is required.";
+    // DOB + Age Check (Minimum 14 years)
+  if (!form.dob) {
+    newErrors.dob = "Date of birth is required.";
+  } else {
+    const today = new Date();
+    const dobDate = new Date(form.dob);
+
+    let age = today.getFullYear() - dobDate.getFullYear();
+    const monthDiff = today.getMonth() - dobDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
+      age--;
     }
 
+    if (age < 14) {
+      newErrors.dob = "You must be at least 14 years old to register.";
+    }
+  }
     // Address
     if (!form.address || form.address.length < 5) {
       newErrors.address = "Address must be at least 5 characters.";
@@ -153,116 +165,100 @@ const Register = () => {
             )}
 
             <form onSubmit={handleSubmit} autoComplete="off">
-              {/* Username */}
-              <div className="mb-3">
-                <label className="form-label">Username</label>
-                <input
-                  type="text"
-                  name="username"
-                  className="form-control"
-                  placeholder="Enter your name"
-                  value={form.username}
-                  onChange={handleChange}
-                  required
-                />
-                {errors.username && (
-                  <small className="text-danger">{errors.username}</small>
-                )}
-              </div>
-
-              {/* Email */}
-              <div className="mb-3">
-                <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  placeholder="example@gmail.com"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                />
-                {errors.email && (
-                  <small className="text-danger">{errors.email}</small>
-                )}
-              </div>
-
-              {/* Phone */}
-              <div className="mb-3">
-                <label className="form-label">Phone</label>
-                <div className="input-group">
-                  <select
-                    name="country_code"
-                    className="form-select l2"
-                    value={form.country_code}
-                    disabled
-                  >
-                    <option value="+91">+91 </option>
-                    <option value="+1">+1 </option>
-                    <option value="+44">+44 </option>
-                  </select>
+              <div className="mb-3 d-flex flex-column flex-sm-row gap-3">
+                {/* Username */}
+                <div className="d-flex flex-column flex-fill ">
+                  <label className="form-label">Username</label>
                   <input
-                    type="tel"
-                    name="phone"
+                    type="text"
+                    name="username"
                     className="form-control"
-                    placeholder="1234567890"
-                    value={form.phone}
+                    placeholder="Enter your name"
+                    value={form.username}
                     onChange={handleChange}
                     required
                   />
+                  {errors.username && (
+                    <small className="text-danger">{errors.username}</small>
+                  )}
                 </div>
-                {errors.phone && (
-                  <small className="text-danger">{errors.phone}</small>
-                )}
-              </div>
 
-              {/* Gender */}
-              <div className="mb-3">
-                <label className="form-label">Gender</label>
-                <div className="d-flex gap-3 justify-content-between">
-                  {["male", "female", "other"].map((g) => (
-                    <label key={g} style={{ flex: 1 }}>
-                      <input
-                        type="radio"
-                        name="gender"
-                        value={g}
-                        checked={form.gender === g}
-                        onChange={handleChange}
-                        className="d-none"
-                      />
-                      <div
-                        className={`p-2 rounded text-center ${
-                          form.gender === g
-                            ? "border border-success bg-light"
-                            : "border"
-                        }`}
-                      >
-                        {g.charAt(0).toUpperCase() + g.slice(1)}
-                      </div>
-                    </label>
-                  ))}
+                {/* Email */}
+                <div className="d-flex flex-column flex-fill">
+                  <label className="form-label">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    placeholder="example@gmail.com"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errors.email && (
+                    <small className="text-danger">{errors.email}</small>
+                  )}
                 </div>
-                {errors.gender && (
-                  <small className="text-danger">{errors.gender}</small>
-                )}
               </div>
 
-              {/* DOB */}
-              <div className="mb-3">
-                <label className="form-label">Date of Birth</label>
-                <input
-                  type="date"
-                  name="dob"
-                  className="form-control"
-                  value={form.dob}
-                  onChange={handleChange}
-                  required
-                />
-                {errors.dob && (
-                  <small className="text-danger">{errors.dob}</small>
-                )}
+              <div className="mb-3 d-flex flex-column flex-sm-row gap-3">
+                <div className="d-flex flex-column flex-fill ">
+                  <label className="form-label">Phone</label>
+                  <div className="input-group">
+                    <select
+                      name="country_code"
+                      className="form-select l2"
+                      value={form.country_code}
+                      disabled
+                    >
+                      <option value="+91">+91 </option>
+                      <option value="+1">+1 </option>
+                      <option value="+44">+44 </option>
+                    </select>
+                    <input
+                      type="tel"
+                      name="phone"
+                      className="form-control"
+                      placeholder="1234567890"
+                      value={form.phone}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  {errors.phone && (
+                    <small className="text-danger">{errors.phone}</small>
+                  )}
+                </div>
+                <div className="d-flex flex-column flex-fill">
+                  <label className="form-label">Gender</label>
+                  <div className="d-flex gap-3 justify-content-center mt-2">
+                    {["male", "female", "other"].map((g) => (
+                      <label key={g} style={{ flex: 1 }}>
+                        <input
+                          type="radio"
+                          name="gender"
+                          value={g}
+                          checked={form.gender === g}
+                          onChange={handleChange}
+                          className="d-none align-items-center"
+                        />
+                        <div
+                          className={`p-2 rounded text-center ${
+                            form.gender === g
+                              ? "border border-success bg-light"
+                              : "border"
+                          }`}
+                        >
+                          {g.charAt(0).toUpperCase() + g.slice(1)}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                  {errors.gender && (
+                    <small className="text-danger">{errors.gender}</small>
+                  )}
+                </div>
               </div>
-
               {/* Address */}
               <div className="mb-3">
                 <label className="form-label">Address</label>
@@ -280,25 +276,39 @@ const Register = () => {
                   <small className="text-danger">{errors.address}</small>
                 )}
               </div>
-
-              {/* Password */}
-              <div className="mb-3">
-                <label className="form-label">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="********"
-                  className="form-control"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  required
-                />
-                <small className="text-muted">{strengthMessage}</small>
-                {errors.password && (
-                  <small className="text-danger d-block">
-                    {errors.password}
-                  </small>
-                )}
+              <div className="mb-3 d-flex flex-column flex-sm-row gap-3">
+                <div className="d-flex flex-column flex-fill">
+                  <label className="form-label">Date of Birth</label>
+                  <input
+                    type="date"
+                    name="dob"
+                    className="form-control"
+                    value={form.dob}
+                    onChange={handleChange}
+                    required
+                  />
+                  {errors.dob && (
+                    <small className="text-danger">{errors.dob}</small>
+                  )}
+                </div>
+                <div className="d-flex flex-column flex-fill">
+                  <label className="form-label">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="********"
+                    className="form-control"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                  <small className="text-muted">{strengthMessage}</small>
+                  {errors.password && (
+                    <small className="text-danger d-block">
+                      {errors.password}
+                    </small>
+                  )}
+                </div>
               </div>
 
               <button type="submit" className="btn7 fw-bold w-100 rounded">
