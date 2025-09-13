@@ -61,7 +61,7 @@ const Login = ({ setUsername }) => {
     <div className="body">
       <div className="container d-flex justify-content-center align-items-center vh-100">
         <div className="login-container">
-          <h2 className="text-success text-center mb-3 head h2 ">Login</h2>
+          <h2 className="text-success text-center mb-3  h2 ">Login</h2>
           <hr />
           {errorMessage && (
             <div className="alert alert-danger">{errorMessage}</div>
