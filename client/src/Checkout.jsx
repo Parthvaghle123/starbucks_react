@@ -50,20 +50,43 @@ const Check = () => {
   const placeOrder = async (e) => {
     e.preventDefault();
 
-    // remove spaces for validation
     const rawCardNumber = formData.cardNumber.replace(/\s/g, "");
 
     if (formData.paymentMethod === "Online Payment") {
       if (rawCardNumber.length !== 16) {
-        setErrorMsg("Card number must be exactly 16 digits.");
+        alert(" Card number must be exactly 16 digits.");
         return;
       }
       if (!/^\d{2}\/\d{2}$/.test(formData.expiry)) {
-        setErrorMsg("Expiry must be in MM/YY format.");
+        alert(" Expiry must be in MM/YY format.");
         return;
       }
+
+      // ---- Expiry Validation ----
+      const [mm, yy] = formData.expiry.split("/");
+      const month = parseInt(mm, 10);
+      const year = parseInt("20" + yy, 10);
+
+      if (month < 1 || month > 12) {
+        alert(" Invalid month in expiry.");
+        return;
+      }
+
+      const now = new Date();
+      const currentMonth = now.getMonth() + 1;
+      const currentYear = now.getFullYear();
+
+      if (year < currentYear) {
+        alert("Card expiry year cannot be in the past.");
+        return;
+      }
+      if (year === currentYear && month < currentMonth) {
+        alert("Card expiry month cannot be in the past.");
+        return;
+      }
+
       if (formData.cvv.length < 3) {
-        setErrorMsg("CVV must be at least 3 digits.");
+        alert(" CVV must be at least 3 digits.");
         return;
       }
     }
@@ -73,7 +96,6 @@ const Check = () => {
 
     const token = localStorage.getItem("token");
     try {
-      // send raw digits to backend
       const payload = {
         ...formData,
         cardNumber: rawCardNumber,
@@ -95,50 +117,54 @@ const Check = () => {
   return (
     <div className="container py-4">
       <div className="row justify-content-center">
-        <div className="col-lg-5 col-md-8">
+        <div className="col-lg-7 col-md-8">
           <div className="card shadow-lg border-0 p-4 rounded-4">
-              <h1 className="fs-3 text-success text-center fw-bold checkout-title">Payment</h1>
-              <p className="text-success fw-bold text-center checkout-subtitle">Brew & Pay • Easy Checkout</p>
+            <h1 className="fs-3 text-success text-center fw-bold checkout-title">
+              Payment
+            </h1>
+            <p className="text-success fw-bold text-center checkout-subtitle">
+              Brew & Pay • Easy Checkout
+            </p>
             <hr />
             {errorMsg && (
               <div className="alert alert-danger py-2">{errorMsg}</div>
             )}
 
             <form onSubmit={placeOrder}>
-              {/* Email */}
-              <div className="mb-3">
-                <label className="form-label fw-semibold">Email ID</label>
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control form-control-lg rounded-3"
-                  value={formData.email}
-                  readOnly
-                  required
-                />
-              </div>
-
-              {/* Phone */}
-              <div className="mb-3">
-                <label className="form-label fw-semibold">Phone Number</label>
-                <div className="input-group">
-                  <select
-                    className="form-select"
-                    value={formData.countryCode}
-                    style={{ maxWidth: "100px" }}
-                    disabled
-                  >
-                    <option value="+91">+91 🇮🇳</option>
-                  </select>
+              {/* Email + Phone */}
+              <div className="mb-3 d-flex flex-column flex-sm-row gap-3">
+                <div className="d-flex flex-column flex-fill">
+                  <label className="form-label fw-semibold">Email ID</label>
                   <input
-                    type="tel"
-                    name="phone"
-                    className="form-control"
-                    value={formData.phone}
+                    type="email"
+                    name="email"
+                    className="form-control form-control-lg rounded-3"
+                    value={formData.email}
                     readOnly
-                    pattern="[0-9]{10}"
                     required
                   />
+                </div>
+                <div className="d-flex flex-column flex-fill">
+                  <label className="form-label fw-semibold">Phone Number</label>
+                  <div className="input-group">
+                    <select
+                      className="form-select"
+                      value={formData.countryCode}
+                      style={{ maxWidth: "100px", height: "50px" }}
+                      disabled
+                    >
+                      <option value="+91">+91 🇮🇳</option>
+                    </select>
+                    <input
+                      type="tel"
+                      name="phone"
+                      className="form-control"
+                      value={formData.phone}
+                      readOnly
+                      pattern="[0-9]{10}"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -158,39 +184,44 @@ const Check = () => {
                 ></textarea>
               </div>
 
-              {/* Payment Method */}
+               {/* Payment Method */}
               <div className="mb-3">
                 <label className="form-label fw-semibold">Payment Method</label>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="paymentMethod"
-                    value="Cash On Delivery"
-                    checked={formData.paymentMethod === "Cash On Delivery"}
-                    onChange={handleChange}
-                    id="cod"
-                  />
-                  <label className="form-check-label" htmlFor="cod">
-                    Cash on Delivery
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="paymentMethod"
-                    value="Online Payment"
-                    checked={formData.paymentMethod === "Online Payment"}
-                    onChange={handleChange}
-                    id="online"
-                  />
-                  <label className="form-check-label" htmlFor="online">
-                    Online Payment
-                  </label>
+                <div className="mb-3 d-flex flex-column flex-sm-row gap-3">
+                  <div className="d-flex flex-column flex-fill ">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="paymentMethod"
+                        value="Cash On Delivery"
+                        checked={formData.paymentMethod === "Cash On Delivery"}
+                        onChange={handleChange}
+                        id="cod"
+                      />
+                      <label className="form-check-label" htmlFor="cod">
+                        Cash on Delivery
+                      </label>
+                    </div>
+                  </div>
+                  <div className="d-flex flex-column flex-fill me-5">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="paymentMethod"
+                        value="Online Payment"
+                        checked={formData.paymentMethod === "Online Payment"}
+                        onChange={handleChange}
+                        id="online"
+                      />
+                      <label className="form-check-label" htmlFor="online">
+                        Online Payment
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
-
               {/* Card Details */}
               {formData.paymentMethod === "Online Payment" && (
                 <>
@@ -207,22 +238,15 @@ const Check = () => {
                       placeholder="1234 5678 9012 3456"
                       value={formData.cardNumber}
                       onChange={(e) => {
-                        let val = e.target.value.replace(/\D/g, ""); // only numbers
-                        val = val.slice(0, 16); // limit 16 digits
-                        // insert space after every 4 digits
+                        let val = e.target.value.replace(/\D/g, "");
+                        val = val.slice(0, 16);
                         val = val.replace(/(\d{4})(?=\d)/g, "$1 ");
                         setFormData((prev) => ({ ...prev, cardNumber: val }));
                       }}
                       inputMode="numeric"
-                      maxLength="19" // 16 digits + 3 spaces
+                      maxLength="19"
                       required
                     />
-                    {formData.cardNumber.replace(/\s/g, "").length > 0 &&
-                      formData.cardNumber.replace(/\s/g, "").length < 16 && (
-                        <small className="text-danger">
-                          Card number must be 16 digits
-                        </small>
-                      )}
                   </div>
 
                   {/* Expiry + CVV */}
