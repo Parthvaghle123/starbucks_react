@@ -588,49 +588,54 @@ const Products = () => {
                         />
                       </div>
                     </div>
-                    <label className="form-label">Image Preview</label>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        marginTop: "10px",
-                      }}
-                    >
-                      {imagePreview && (
+                    {/* Image Preview Section */}
+                    {formData.image && (
+                      <div className="mb-3">
+                        <label className="form-label">Image Preview</label>
                         <div
                           style={{
-                            border: "2px solid #00704A",
-                            borderRadius: "12px",
-                            padding: "8px",
-                            background: "#fafafa",
-                            boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            marginTop: "10px",
                           }}
                         >
-                          <img
-                            src={imagePreview}
-                            alt="Preview"
-                            style={{
-                              maxWidth: "220px",
-                              maxHeight: "220px",
-                              borderRadius: "8px",
-                              display: "block",
-                            }}
-                          />
+                          {imagePreview && (
+                            <div
+                              style={{
+                                border: "2px solid #00704A",
+                                borderRadius: "12px",
+                                padding: "8px",
+                                background: "#fafafa",
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
+                              }}
+                            >
+                              <img
+                                src={imagePreview}
+                                alt="Preview"
+                                style={{
+                                  maxWidth: "220px",
+                                  maxHeight: "220px",
+                                  borderRadius: "8px",
+                                  display: "block",
+                                }}
+                              />
+                            </div>
+                          )}
+                          {imageError && (
+                            <div
+                              style={{
+                                color: "red",
+                                marginTop: "5px",
+                                textAlign: "center",
+                              }}
+                            >
+                              {imageError}
+                            </div>
+                          )}
                         </div>
-                      )}
-                      {imageError && (
-                        <div
-                          style={{
-                            color: "red",
-                            marginTop: "5px",
-                            textAlign: "center",
-                          }}
-                        >
-                          {imageError}
-                        </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                     <div className="row">
                       <div className="col-md-12 mb-3">
                         <div className="form-check">
