@@ -47,72 +47,104 @@ const Check = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const placeOrder = async (e) => {
-    e.preventDefault();
-
-    const rawCardNumber = formData.cardNumber.replace(/\s/g, "");
-
-    if (formData.paymentMethod === "Online Payment") {
-      if (rawCardNumber.length !== 16) {
-        alert(" Card number must be exactly 16 digits.");
-        return;
+  // Luhn algorithm implementation
+  const luhnCheck = (numStr) => {
+    // numStr should be only digits (no spaces)
+    let sum = 0;
+    let shouldDouble = false;
+    // process digits right-to-left
+    for (let i = numStr.length - 1; i >= 0; i--) {
+      let digit = parseInt(numStr.charAt(i), 10);
+      if (shouldDouble) {
+        digit = digit * 2;
+        if (digit > 9) digit -= 9;
       }
-      if (!/^\d{2}\/\d{2}$/.test(formData.expiry)) {
-        alert(" Expiry must be in MM/YY format.");
-        return;
-      }
-
-      // ---- Expiry Validation ----
-      const [mm, yy] = formData.expiry.split("/");
-      const month = parseInt(mm, 10);
-      const year = parseInt("20" + yy, 10);
-
-      if (month < 1 || month > 12) {
-        alert(" Invalid month in expiry.");
-        return;
-      }
-
-      const now = new Date();
-      const currentMonth = now.getMonth() + 1;
-      const currentYear = now.getFullYear();
-
-      if (year < currentYear) {
-        alert("Card expiry year cannot be in the past.");
-        return;
-      }
-      if (year === currentYear && month < currentMonth) {
-        alert("Card expiry month cannot be in the past.");
-        return;
-      }
-
-      if (formData.cvv.length < 3) {
-        alert(" CVV must be at least 3 digits.");
-        return;
-      }
+      sum += digit;
+      shouldDouble = !shouldDouble;
     }
-
-    setLoading(true);
-    setErrorMsg("");
-
-    const token = localStorage.getItem("token");
-    try {
-      const payload = {
-        ...formData,
-        cardNumber: rawCardNumber,
-      };
-
-      await axios.post("http://localhost:3001/order", payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      navigate("/order-success");
-    } catch (err) {
-      console.error("Order failed", err);
-      setErrorMsg("❌ Order failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    return sum % 10 === 0;
   };
+
+const placeOrder = async (e) => {
+  e.preventDefault();
+
+  const rawCardNumber = formData.cardNumber.replace(/\s/g, "");
+
+  if (formData.paymentMethod === "Online Payment") {
+    // Basic length check — many cards are 13-19 digits, but most common are 16.
+    if (rawCardNumber.length < 13 || rawCardNumber.length > 19) {
+      alert(" Invalid card number — it should be between 13 and 19 digits.");
+      return;
+    }
+
+    // ensure only digits
+    if (!/^\d+$/.test(rawCardNumber)) {
+      alert(" Card number must contain only digits.");
+      return;
+    }
+
+    // Luhn validation
+    if (!luhnCheck(rawCardNumber)) {
+      alert("Invalid card number. Please enter a valid card.");
+      return;
+    }
+
+    if (!/^\d{2}\/\d{2}$/.test(formData.expiry)) {
+      alert(" Expiry must be in MM/YY format.");
+      return;
+    }
+
+    // ---- Expiry Validation ----
+    const [mm, yy] = formData.expiry.split("/");
+    const month = parseInt(mm, 10);
+    const year = parseInt("20" + yy, 10);
+
+    if (month < 1 || month > 12) {
+      alert("Invalid month.");
+      return;
+    }
+
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
+
+    if (year < currentYear) {
+      alert("Card has expired.");
+      return;
+    }
+    if (year === currentYear && month < currentMonth) {
+      alert("Expiry month cannot be in the past.");
+      return;
+    }
+
+    if (formData.cvv.length < 3) {
+      alert("CVV must be at least 3 digits.");
+      return;
+    }
+  }
+
+  setLoading(true);
+  setErrorMsg("");
+
+  const token = localStorage.getItem("token");
+  try {
+    const payload = {
+      ...formData,
+      cardNumber: rawCardNumber,
+    };
+
+    await axios.post("http://localhost:3001/order", payload, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    navigate("/order-success");
+  } catch (err) {
+    console.error("Order failed", err);
+    setErrorMsg("❌ Order failed. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="container py-4">
@@ -239,12 +271,12 @@ const Check = () => {
                       value={formData.cardNumber}
                       onChange={(e) => {
                         let val = e.target.value.replace(/\D/g, "");
-                        val = val.slice(0, 16);
+                        val = val.slice(0, 16); // allow up to 19 digits
                         val = val.replace(/(\d{4})(?=\d)/g, "$1 ");
                         setFormData((prev) => ({ ...prev, cardNumber: val }));
                       }}
                       inputMode="numeric"
-                      maxLength="19"
+                      maxLength="23" // spaces included
                       required
                     />
                   </div>
