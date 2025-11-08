@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/Home.css"; // 🔹 popup CSS અહીં હશે
 import axios from "axios";
@@ -8,12 +8,13 @@ import axios from "axios";
 const products1 = [
   { id: 0, image: "https://starbucksstatic.cognizantorderserv.com/Items/Small/100501.jpg", title: "Java Chip Frappuccino", per:"Mocha sauce and Frappuccino® chips blended with with Frappu..",price: 441 },
   { id: 1, image: "https://starbucksstatic.cognizantorderserv.com/Items/Small/112539.jpg", title: "Picco Cappuccino", per:"Dark, Rich in flavour espresso lies in wait under a smoothed..",price: 200 },
-  { id: 2, image: "https://starbucksstatic.cognizantorderserv.com/Items/Small/100385.jpg", title: "Iced Caffè Latte",per:"Our dark, Rich in flavour espresso is combined with milk and..", price: 372 },
+  { id: 2, image: "https://starbucksstatic.cognizantorderserv.com/Items/Small/100385.jpg", title: "Iced Caffe Latte",per:"Our dark, Rich in flavour espresso is combined with milk and..", price: 372 },
 
 ];
 
 const Item = () => {
   const [filteredProducts, setFilteredProducts] = useState(products1);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const token = localStorage.getItem("token");
@@ -42,6 +43,7 @@ const Item = () => {
   const addToCart = async (product) => {
     if (!token) {
       alert("Please login to add items to cart.");
+      navigate("/login");
       return;
     }
 

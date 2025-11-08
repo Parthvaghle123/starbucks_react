@@ -173,5 +173,5 @@ input[type="radio"] {
   100% { opacity: 0; transform: translate(-50%, -20px); }
 }
 .l2{
-  max-width: 90px !important;
+  max-width: 80px !important;
 }

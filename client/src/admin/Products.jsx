@@ -244,21 +244,29 @@ const Products = () => {
     }
   };
 
-  const openEditModal = (product) => {
-    setSelectedProduct(product);
-    setFormData({
-      name: product.name,
-      description: product.description,
-      price: product.price.toString(),
-      image: product.image,
-      category: product.category,
-      stock: product.stock.toString(),
-      featured: product.featured,
-      displayOnGift: product.displayOnGift,
-      displayOnMenu: product.displayOnMenu,
-    });
-    setShowEditModal(true);
-  };
+ const openEditModal = (product) => {
+  if (!product) {
+    console.error("Product data not found");
+    return;
+  }
+
+  setSelectedProduct(product);
+
+  setFormData({
+    name: product.name || "",
+    description: product.description || "",
+    price: product.price ? product.price.toString() : "0",
+    image: product.image || "",
+    category: product.category || "Other",
+    stock: product.stock ? product.stock.toString() : "0",
+    featured: !!product.featured,
+    displayOnGift: !!product.displayOnGift,
+    displayOnMenu: !!product.displayOnMenu,
+  });
+
+  setShowEditModal(true);
+};
+
 
   if (loading) {
     return (
@@ -700,11 +708,6 @@ const Products = () => {
                     <Edit size={24} className="me-2" />
                     Edit Product: {selectedProduct?.name}
                   </h5>
-                  <button
-                    type="button"
-                    className="btn-close btn-modal-close"
-                    onClick={() => setShowEditModal(false)}
-                  ></button>
                 </div>
                 <form onSubmit={handleEditProduct}>
                   <div className="modal-body">

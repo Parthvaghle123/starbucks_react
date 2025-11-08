@@ -133,7 +133,7 @@ const Home = () => {
               </p>
               <p className="mb-2">
                 <i className="far fa-envelope me-2 text-warning"></i>
-                vaghlaparth2005@gmail.com
+                vaghelaparth2005@gmail.com
               </p>
               <p>
                 <i className="fas fa-phone me-2 text-warning"></i>

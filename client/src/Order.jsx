@@ -312,7 +312,7 @@ const Orders = () => {
                   <div className="d-flex align-items-center">
                     <strong>Status:</strong>&nbsp;
                     <span
-                      className={`badge ${
+                      className={`badge badge-fixed ${
                         order.status === "Cancelled"
                           ? "bg-danger"
                           : order.status === "Approved"
@@ -394,7 +394,7 @@ const Orders = () => {
                             <td>{item.quantity}</td>
                             <td>
                               <span
-                                className={`badge ${
+                                className={`badge badge-fixed ${
                                   item.status === "Cancelled"
                                     ? "bg-danger"
                                     : "bg-success"

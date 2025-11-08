@@ -225,3 +225,12 @@ td {
     background-color: #198754; /* Green */
 
 }
+/* Order.css માં ઉમેરો */
+.badge-fixed {
+  display: inline-flex;       /* Center text */
+  align-items: center;
+  justify-content: center;
+  width: 100px;              /* Fix width */
+  height: 30px;              /* Fix height */
+  font-size: 14px;           /* Text size */
+}

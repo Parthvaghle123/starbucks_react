@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/Menu.css";
 import axios from "axios";
 
 const Item = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,22 +16,40 @@ const Item = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-  // Fetch products from API
+  // 🔹 Fetch products with proper loading state management
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        // Always set loading to true initially to prevent flash
         setLoading(true);
-        const response = await axios.get('http://localhost:3001/api/products?displayOnMenu=true');
+
+        const response = await axios.get(
+          "http://localhost:3001/api/products?displayOnMenu=true"
+        );
+
+        // Set products immediately
         setProducts(response.data);
         setFilteredProducts(response.data);
         setError(null);
+
+        // Check if this is first load for spinner timing
+        const isFirstLoad = !sessionStorage.getItem("menuPageLoaded");
+
+        if (isFirstLoad) {
+          // First load → show spinner for 2.5 seconds
+          setTimeout(() => {
+            setLoading(false);
+            sessionStorage.setItem("menuPageLoaded", "true");
+          }, 700);
+        } else {
+          // Subsequent loads → show data immediately
+          setLoading(false);
+        }
       } catch (err) {
-        console.error('Error fetching products:', err);
-        setError('Failed to load products');
-        // Fallback to empty array
+        console.error("Error fetching products:", err);
+        setError("Failed to load products");
         setProducts([]);
         setFilteredProducts([]);
-      } finally {
         setLoading(false);
       }
     };
@@ -40,7 +59,8 @@ const Item = () => {
 
   // Handle search filtering
   useEffect(() => {
-    const query = new URLSearchParams(location.search).get("q")?.toLowerCase() || "";
+    const query =
+      new URLSearchParams(location.search).get("q")?.toLowerCase() || "";
     if (query) {
       setLoading(true);
       setTimeout(() => {
@@ -58,6 +78,7 @@ const Item = () => {
   const addToCart = async (product) => {
     if (!token) {
       alert("Please login to add items to cart.");
+      navigate("/login");
       return;
     }
     try {
@@ -89,7 +110,14 @@ const Item = () => {
     return (
       <div className="Herosection_1">
         <div className="container">
-          <div className="alert alert-info text-center">🔄 Loading products...</div>
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: "200px", width: "100%" }}
+          >
+            <div className="spinner-border text-success" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -99,9 +127,7 @@ const Item = () => {
     return (
       <div className="Herosection_1">
         <div className="container">
-          <div className="alert alert-danger text-center">
-            ❌ {error}
-          </div>
+          <div className="alert alert-danger text-center">❌ {error}</div>
         </div>
       </div>
     );
@@ -109,25 +135,36 @@ const Item = () => {
 
   return (
     <>
-      {showToast && <div className="toast-popup bg-success">🛒 {toastMessage}</div>}
+      {showToast && (
+        <div className="toast-popup bg-success">🛒 {toastMessage}</div>
+      )}
       <div className="Herosection_1">
         <div className="container">
           {loading ? (
-            <div className="alert alert-info text-center mt-3">🔄 Searching...</div>
+            <div className="d-flex justify-content-center align-items-center my-4">
+              <div className="spinner-border text-success" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="alert alert-warning text-center">
-              ❌ No products found.
+            <div
+              className="alert alert-danger text-center mt-3 fw-bold align-items-center"
+              style={{
+                width: "18%",
+                backgroundColor: "#e7414c",
+                margin: "20px auto", // centers horizontally
+              }}
+            >
+              {products.length === 0
+                ? "❌ No products found."
+                : " No found products."}
             </div>
           ) : (
             <div id="products3">
               {filteredProducts.map((item) => (
                 <div key={item._id} className="box2">
                   <div className="img-box1">
-                    <img
-                      className="images1"
-                      src={item.image}
-                      alt={item.name}
-                    />
+                    <img className="images1" src={item.image} alt={item.name} />
                   </div>
                   <div className="bottom">
                     <h2>{item.name}</h2>
@@ -159,7 +196,7 @@ const Item = () => {
               </p>
               <p className="mb-2">
                 <i className="far fa-envelope me-2 text-warning"></i>
-                vaghlaparth2005@gmail.com
+                vaghelaparth2005@gmail.com
               </p>
               <p>
                 <i className="fas fa-phone me-2 text-warning"></i>
