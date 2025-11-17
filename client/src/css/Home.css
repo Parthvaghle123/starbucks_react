@@ -132,13 +132,11 @@ h4 {
   max-width: 100% !important;
 }
 }
-/* Original style */
 .toast-popup {
   position: fixed;
   top: 30px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #c3e6cb;
   color: white;
   padding: 20px 20px;
   font-size: 20px;
@@ -147,19 +145,35 @@ h4 {
   z-index: 9999;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   animation: fadeInOut 3s ease-in-out;
-  max-width: 90%; /* responsive for all sizes */
+  max-width: 90%;
+  text-align: center;
+  word-wrap: break-word;
 }
 
-/*  Media query for small screens (e.g. max-width 375px) */
-@media (max-width: 375px) {
+/* Mobile screen fix for <= 480px */
+@media (max-width: 480px) {
   .toast-popup {
-    font-size: 14px;         /* Smaller text */
-    padding: 5px 10px;      /* Smaller padding */
-    border-radius: 8px;      /* Smaller rounded corners */
-    max-width: 100px;        /* Fixed width for small screen */
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    border-radius: 10px;
+    font-size: 16px;
+    padding: 12px;
   }
 }
 
+/* Specific fix for 320px width */
+@media (max-width: 320px) {
+  .toast-popup {
+    top: 8px;
+    font-size: 14px;
+    padding: 8px 10px;
+    width: 95%;
+    max-width: 280px;
+    line-height: 1.4;
+  }
+}
 @keyframes fadeInOut {
   0% { opacity: 0; transform: translate(-50%, -20px); }
   10% { opacity: 1; transform: translate(-50%, 0); }
