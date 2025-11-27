@@ -91,7 +91,7 @@ const Orders = () => {
     doc.setFont("times", "normal");
     doc.text("123 Coffee Street, Seattle WA 98101", 20, y + 10);
     doc.text("Phone: 1-800-STARBUCKS", 20, y + 18);
-    doc.text("www.starbucks.com", 20, y + 26);
+    doc.text("https://client-ochre-tau.vercel.app/", 20, y + 26);
 
     // Invoice banner - removed # symbol
     doc.setFillColor(...starbucksGreen);
@@ -270,7 +270,7 @@ const Orders = () => {
 
         {showCancelToast && (
           <div className="toast-popup bg-danger d-flex justify-content-between align-items-center">
-            ❌ {cancelToastMessage}
+             {cancelToastMessage}
             <button
               className="btn-close btn-close-white ms-2"
               onClick={() => setShowCancelToast(false)}

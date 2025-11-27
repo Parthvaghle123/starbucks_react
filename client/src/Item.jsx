@@ -39,36 +39,37 @@ const Item = () => {
     }
   }, [location.search]);
 
-  // 🔹 Add to Cart Function + Popup Message
   const addToCart = async (product) => {
     if (!token) {
       alert("Please login to add items to cart.");
       navigate("/login");
       return;
     }
-
     try {
       await axios.post(
         "http://localhost:3001/add-to-cart",
         {
-          productId: product.id,
+          productId: product.id.toString(),
           image: product.image,
           title: product.title,
           price: product.price,
         },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
-      // ✅ Show Popup Message
       setToastMessage(`${product.title} added to cart!`);
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
-
-    } catch (err) {
-      console.error(err);
-      alert("Failed to add item");
+    } catch (error) {
+      console.error(error);
+      alert("Already adding item");
     }
   };
+
 
   return (
     <>

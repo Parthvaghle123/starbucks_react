@@ -169,7 +169,7 @@ const ChangePassword = () => {
             </form>
           ) : (
             <div className="text-center mt-4">
-              <div className="spinner-border text-primary" role="status"></div>
+              <div className="spinner-border text-success" role="status"></div>
               <p className="mt-2">Please Wait {redirectCountdown}...</p>
             </div>
           )}
