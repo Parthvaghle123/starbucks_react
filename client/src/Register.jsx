@@ -144,7 +144,7 @@ const Register = () => {
       })
       .catch((err) => {
         console.error("Signup error:", err);
-        setErrorMessage("An error occurred during signup.");
+        setErrorMessage("User Already Exits.");
       });
   };
 
