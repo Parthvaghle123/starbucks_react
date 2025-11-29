@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: "secret", resave: false, saveUninitialized: true }));
 
 // Connect MongoDB
-mongoose.connect("mongodb://localhost:27017/Parth2")
+mongoose.connect("mongodb+srv://vaghelasahil1402_db_user:parth@cluster0.ht5lfrp.mongodb.net/ParthDb")
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.error("MongoDB error", err));
 

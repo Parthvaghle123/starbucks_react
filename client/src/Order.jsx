@@ -391,7 +391,7 @@ const Orders = () => {
                           <tr key={i}>
                             <td className="fs-6">{item.title}</td>
                             <td className="fs-6">₹{item.price.toFixed(2)}</td>
-                            <td>{item.quantity}</td>
+                            <td className="text-success">{item.quantity}</td>
                             <td>
                               <span
                                 className={`badge badge-fixed ${

@@ -333,7 +333,6 @@ const Products = () => {
               <option value="Drinks">Drinks</option>
               <option value="Food">Food</option>
               <option value="Gifts">Gifts</option>
-              <option value="Other">Other</option>
             </select>
           </div>
 
@@ -548,7 +547,6 @@ const Products = () => {
                           <option value="Drinks">Drinks</option>
                           <option value="Food">Food</option>
                           <option value="Gifts">Gifts</option>
-                          <option value="Other">Other</option>
                         </select>
                       </div>
                     </div>
