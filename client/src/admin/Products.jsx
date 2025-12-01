@@ -316,7 +316,7 @@ const Products = () => {
             <input
               type="text"
               className="form-control ps-5"
-              placeholder="Search products by name or description"
+              placeholder="Search products by name "
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
