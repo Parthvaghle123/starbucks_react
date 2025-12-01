@@ -101,7 +101,7 @@ const Item = () => {
       setTimeout(() => setShowToast(false), 3000);
     } catch (error) {
       console.error(error);
-      alert("Already adding item");
+      alert("Already added item");
     }
   };
 
